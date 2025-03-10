@@ -1,0 +1,21 @@
+---
+title: "Module 13"
+format: html
+editor: visual
+---
+
+## Probability and distribution
+
+```{r}
+library(manipulate)
+library(mosaic)
+library(cowplot)
+
+```
+
+### Probability
+
+applied to population-level variables to describe the magnitude of chance associated with a particular observation or events.
+
+Probabilities for events or collections of events necessarily vary between zero and one. Outcomes or combinations of outcomes that are impossible have Pr=0, those that are certain have Pr=1.
+

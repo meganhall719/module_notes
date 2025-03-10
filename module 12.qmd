@@ -1,0 +1,132 @@
+---
+title: "Module_Notes"
+format: html
+editor: visual
+---
+
+## Module 12
+
+```{r}
+library(mosaic)
+library(radiant)
+library(moments)
+library(sciplot)
+library(infer)
+
+```
+
+#### population: Population means for a given variable, **x**, are often indicated as Ux
+
+all of the elements from a set of data (N)
+
+ex. all the gorillas in the world
+
+#### Sample: ***n***
+
+one or more observations drawn from a population by a sampling proceses
+
+ex. all the gorillas in africa
+
+#### Parameter
+
+a measurable characteristic of a population that summarizes data
+
+ex. the mean value of femur lengths of all gorillas
+
+#### Statistic
+
+a measurable characteristic about a sample that summarizes data.
+
+### Measures of Central Tendency
+
+#### median
+
+### mean
+
+### mode
+
+### harmonic mean
+
+-   Given a vector, `x <- c(1,2,3,4,5,6,7,8,9,10,25,50,100,200,1000)`, write your own function to determine the *geometric mean* of the values in a vector. Remember the general form for functions is: `<function name> <- function(<arguments>) {<code>}`
+
+```{r}
+x<- c(1,2,3,4,5,6,7,8,9,10,25,50,100,200,1000)
+geometric_mean<-function(x){
+  prod(x)^(1/length(x))
+}
+geometric_mean(x)
+```
+
+### Measures of Spread
+
+The *total range* (min to max) is one measure of spread, as is the *interquartile* range (25th to 75th quartile).
+
+***Sum of Squares*** = the sum of the squared deviations of a set of values from the mean of that set
+
+**sum of squares** always increases with sample size… you can see this by adding more data points to your vector
+
+#### a **mean squared deviation**.
+
+we are often more interested in the *average* deviation of values from the mean rather than the straight sum of squares
+
+-   μ,x¯ = population mean, sample mean
+
+    -   x¯ is an estimator for μ
+
+-   σ2,s2 = population variance, sample variance
+
+-   σ,s = population standard deviation, sample standard deviation
+
+    -   s is an estimator for σ
+
+-   Sample variance and standard deviation: `var()`, `sd()`
+
+    -   These are measures of the variation/spread in a **sample**
+
+-   Sampling distributions and standard errors
+
+    -   Mean of the sampling distribution of x¯ is an estimate of μ
+
+    -   Standard deviation of the sampling distribution of x¯ = σn = standard error
+
+        -   This is a measure of the variation/spread in a **sample statistic**
+
+    -   Standard errors: `sciplot::se()`
+
+-   Using the `sample_n()` function from {dplyr} and `do() * <function>` construction from {mosaic} to generate sampling distributions
+
+Write a function to calculate the variance for a vector of values representing a sample of measurements. Remember this means dividing the sample sum of squares by .
+
+```{r}
+sample_var <-function(x){
+  sum((x-mean(x))^2)/(length(x)-1)
+}
+sample_var(x)
+```
+
+```{r}
+var(x)
+```
+
+### Measure of Shape
+
+#### Sekwness
+
+measures the asymmetry of a distribution.\
+\#### Symmetrical distributions
+
+zero skewness
+
+#### Right-skewed
+
+longer or fatter tail on the right-hand side also called postiive skewness
+
+#### Left-Skewed
+
+have negative skewness longer or fatter tails on the left hand time
+
+#### Standard Error
+
+how far off is a statistic that we calculate based on a sampling distribution likely to be from the true POPULATION value of the parameter of interest? he SE of the mean is thus a measure of how dispersed sample means ( ) are expected to be around the estimated population mean ( ) (i.e., how far off from the true population mean an estimate based on a sample of size is likely to be)
+
+-   as the number of replicates increases, our estimates of both the mean and SE become less variable, while as the sample size increases, our SE decreases (and our estimate of the mean thus becomes less uncertain), regardless of number of replicates.

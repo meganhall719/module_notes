@@ -1,0 +1,181 @@
+---
+title: "Module 15"
+format: html
+editor: visual
+---
+
+## Module 15 Classical Hypothsis Testing
+
+```{r}
+library(tidyverse)
+library(mosaic)
+
+```
+
+Classical hypothesis testing
+
+-   Formally stating a cliam
+
+-   null hypothesis : claim that is presumed to be true H0 = **null hypothesis** = a sample statistic shows no deviation from what is expected or neutral based on the parameter space of possible outcomes under the presumed random sampling proces
+
+-   alternative hypothesis : what we are testing HA = **alternative hypothesis** = a sample statistic deviates more than expected by chance from what is expected or neutral.
+
+-   HA\>H0, which constitutes an “upper one-tailed test” (i.e., our sample statistic is greater than that expected under the null)
+
+-   HA\<H0, which constitutes a “lower one-tailed test” (i.e., our sample statistic is less than that expected under the null)
+
+-   HA≠H0, which constitutes a “two-tailed test” (i.e., our sample statistic is different, maybe greater maybe less, than that expected under the null)
+
+-   
+
+To start a hypothesis Test
+
+1.  Calculate a test statistic based on your data
+2.  Calculate p value
+3.  evaluate whether the p value is less than or greater than the significant level alpha (a)
+4.  we reject Ho when P\<a
+
+usually a (0.05 of 0.01
+
+## Parametric Hypothesis Testing
+
+In Parametric statistics:
+
+-   wee assume the sampling distribution of our statistic of interest (mean) takes a normal distribution
+
+-   we calculate a test statistic that summarizes the location about our data relative to the implied, theoretical sampling distribution.
+
+-   The value of our test statistic is determined by both
+
+    -   both the **difference between the original sample statistic and the expected null value** (e.g., the difference between the mean of our sample and the expected population mean) and the **standard error of the sample statistic**. The difference between the original sample statistic and the expected null value
+
+    -   The value of our test statistic (i.e., the “distance” of that test statistic from what is expected) and the shape of the presumed sampling distribution for that statistic are the sole drivers of the smallness of the **p value**
+
+    -   **p value** effectively represents the area under the sampling distribution associated with test statistic values **as or more extreme** than the one we observed.
+
+### Calculate the p value for a parametric Test
+
+-   specify the sample statistic we want to evaluate (mean)
+
+-   Specify the test statistic of interest and the form of the sampling distribution for that statistic (e.g., Z or T and a *standard normal* or *T* distribution).
+
+-   Calculate the *tail probability*, i.e., the probability of obtaining a statistic (e.g., a mean) as or more extreme than was observed assuming that null distribution.
+
+### One sample Z and T test
+
+```{r}
+library(tidyverse)
+
+f <- "https://raw.githubusercontent.com/difiore/ada-datasets/main/vervet-weights.csv"
+
+d <- read_csv(f, col_names = TRUE)
+head(d)
+
+
+```
+
+```{r}
+
+mean(d$weight)
+
+```
+
+Z= x - u / s/ sqrt n
+
+-   x¯ = mean of sample observations
+
+-   μ = expected mean
+
+-   s = sample standard deviation (as an estimate of the population SD)
+
+-   n = number of sample observations
+
+    calculate the mean
+
+    ```{r}
+    w<-d$weight #current weights
+    m <-mean(w)
+    m
+    ```
+
+Calculate the standard deviation
+
+```{r}
+sd <- sd(w, na.rm = TRUE)
+sd
+```
+
+Calculate the Standard Error
+
+```{r}
+se <- sd/ sqrt(length(w))
+se
+```
+
+Plot the histogram
+
+```{r}
+library(lattice)
+
+histogram_plot <- histogram(w, 
+          breaks = seq(from = m - 4*sd, to = m + 4*sd, length.out = 20), 
+          main = "Histogram of Vervet Weights",
+          xlab = "x", 
+          ylab = "proportion of total", 
+          type = "density", 
+          ylim = c(0, 3), 
+          col = rgb(0, 0, 1, 0.5),
+          panel = function(x, ...) {
+            panel.histogram(x, ...)
+            panel.abline(v = 5, col = "black", lty = 1, lwd = 2)  # expected mean
+            panel.abline(v = m, col = "black", lty = 3, lwd = 2)   # observed mean
+          })
+
+print(histogram_plot)
+
+plotDist("norm", mean = m, sd = se, xlim = c(m - 4 * se, m + 4 * se), add = TRUE,
+    lwd = 1, col = "black", lty = 1)
+###The following code demonstrates that more than 95% of the sampling distribution suggested by your sample is above the expected mean of 5.0…
+z <- qnorm(0.05)  # define lower bound of upper 95% of distribution
+ladd(panel.polygon(cbind(c(m + z * se, seq(from = m + z * se, to = max(x), length.out = 1000),
+    max(x)), c(0, dnorm(seq(from = m + z * se, to = max(x), length.out = 1000), m,
+    se), 0)), border = "black", col = rgb(1, 0, 1, 0.5)))
+```
+
+use plotDist() function from {mosaic} , plot the location of your sample mean, the sampling distribution suggested by your samples standard error
+
+```{r}
+### Z= (mean - expected mean (mu))/ standard error
+mu <- 5 # we knew this from our given information
+z <- (m-mu)/se
+z
+
+```
+
+####  If our sample mean is greater than expected, then the test statistic is positive; if our sample mean is less than expected, then the test statistic is negative.
+
+### Evaluate if Z is "significant use pnorm
+
+```{r}
+p<- 1 - pnorm(z)
+p
+
+# or 
+
+p <- pnorm(z, lower.tail = FALSE)
+p
+
+#visualise on a standard normal curve
+plotDist("norm", main = paste0("Standard Normal Distribution\nblue area = ", round(p,
+    4) * 100, "%"), ylab = "", xlab = "SD")
+ladd(panel.abline(v = z, col = "blue", lty = 1, lwd = 2))
+ladd(panel.polygon(cbind(c(z, seq(from = z, to = 4, length.out = 100), 4), c(0, dnorm(seq(from = z,
+    to = 4, length.out = 100), 0, 1), 0)), border = "black", col = rgb(0, 0, 1, 0.5)))
+```
+
+## Or sample size from a population is typically limited so we should instead use the t distribution instead to determine p-value
+
+```{r}
+t_stat <- t.test(x = w, mu = mu, alternative = "greater")
+t_stat  # the value of the t statistic is a Z score
+```

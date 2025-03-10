@@ -1,0 +1,74 @@
+---
+title: "Module 11 functions and flow"
+format: html
+editor: visual
+---
+
+## Module 11 Functions and flow control
+
+```         
+```
+
+```{r}
+library(sjmisc)
+library(tidyverse)
+```
+
+Flow control if something then do else
+
+```{r}
+i <- TRUE
+
+if (i == TRUE) {
+    print("Yes")
+} else {
+    print("No")
+}
+
+```
+
+ifelse() function \<--- There is also the if_else function are teacher uses much more.
+
+```{r}
+
+i <- 9
+ifelse(i <= 10, "Yes", "No")
+
+```
+
+For mixing several "if... else..." statemtns use --\> case_when
+
+```{r}
+i <- 1:10
+output <- case_when(i <= 3 ~ "small", i <= 7 ~ "medium", i <= 10 ~ "large")
+output
+```
+
+If you have a list of numbers these fucntions will tell you a little about all of them
+
+```{r}
+i<- c(9,10,11)
+any(i <= 10)
+all(i<=10)
+```
+
+## relational operators
+
+-   less than, greater than: `<`, `>`
+
+-   less than or equal to, greater than or equal to: `<=`, `>=`
+
+-   equal to: `==` **NOTE:** This uses a double equal sign!
+
+-   not equal to: `!=`
+
+## Iterating with Loops
+for()
+example
+```{r}
+v<-seq(from=100, to= 120, by = 2)
+for (i in 1: length(v)) {
+  #here, we are looping ober the indices of v 
+  print(v[i])
+}
+```
